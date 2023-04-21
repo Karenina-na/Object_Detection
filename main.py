@@ -144,6 +144,7 @@ def run(
                     # -----------------------------------------------------------------------
                     # 将xyxy(左上角 + 右下角)格式转换为xywh(中心的 + 宽高)格式 并除以gn(whwh)做归一化 转为list再保存
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()
+                    get_position_action(xywh)
                     # -----------------------------------------------------------------------
 
                     # 在原图上画框 + 将预测到的目标剪切出来
@@ -168,6 +169,11 @@ def run(
     # seen为预测图片总数，dt为耗时时间，求出平均时间
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
+
+
+# object position function
+def get_position_action(data):
+    pass
 
 
 # get windows screen number
