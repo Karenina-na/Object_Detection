@@ -9,7 +9,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="98">
+          <list size="119">
             <item index="0" class="java.lang.String" itemvalue="scikit-learn" />
             <item index="1" class="java.lang.String" itemvalue="pickleshare" />
             <item index="2" class="java.lang.String" itemvalue="defusedxml" />
@@ -108,6 +108,27 @@
             <item index="95" class="java.lang.String" itemvalue="tqdm" />
             <item index="96" class="java.lang.String" itemvalue="colorama" />
             <item index="97" class="java.lang.String" itemvalue="openpyxl" />
+            <item index="98" class="java.lang.String" itemvalue="wincertstore" />
+            <item index="99" class="java.lang.String" itemvalue="GitPython" />
+            <item index="100" class="java.lang.String" itemvalue="networkx" />
+            <item index="101" class="java.lang.String" itemvalue="thop" />
+            <item index="102" class="java.lang.String" itemvalue="smmap" />
+            <item index="103" class="java.lang.String" itemvalue="PyYAML" />
+            <item index="104" class="java.lang.String" itemvalue="sklearn" />
+            <item index="105" class="java.lang.String" itemvalue="torch" />
+            <item index="106" class="java.lang.String" itemvalue="requests" />
+            <item index="107" class="java.lang.String" itemvalue="gitdb" />
+            <item index="108" class="java.lang.String" itemvalue="torchvision" />
+            <item index="109" class="java.lang.String" itemvalue="mkl-fft" />
+            <item index="110" class="java.lang.String" itemvalue="seaborn" />
+            <item index="111" class="java.lang.String" itemvalue="filelock" />
+            <item index="112" class="java.lang.String" itemvalue="mpmath" />
+            <item index="113" class="java.lang.String" itemvalue="charset-normalizer" />
+            <item index="114" class="java.lang.String" itemvalue="urllib3" />
+            <item index="115" class="java.lang.String" itemvalue="pycocotools" />
+            <item index="116" class="java.lang.String" itemvalue="mkl-service" />
+            <item index="117" class="java.lang.String" itemvalue="Pillow" />
+            <item index="118" class="java.lang.String" itemvalue="tensorboard" />
           </list>
         </value>
       </option>
