@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <weights attribute="./yolov5m.pt"/> <!--模型权重-->
+    <device attribute="0"/> <!--推理设备 cpu, 0, 1, ...(gpu)-->
+    <img-size attribute="[640, 640]"/>  <!--推理图像尺寸-->
+    <conf_thres attribute="0.25"/>  <!--置信度阈值-->
+    <iou_thresh attribute="0.45"/>  <!--IOU阈值(合并框)-->
+    <max_det attribute="1000"/> <!--最大检测目标数-->
+    <classes attribute="[0]"/>  <!--检测类别 0:person-->
+    <augment attribute="True"/>    <!--数据增强-->
+    <visualize attribute="True"/>   <!--是否可视化-->
+    <line_thickness attribute="4"/> <!--框线粗细-->
+    <half attribute="False"/>   <!--半精推理-->
+    <dnn attribute="False"/>    <!--OpenCV DNN推理-->
+</root>

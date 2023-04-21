@@ -7,6 +7,7 @@ import pyautogui
 import torch
 from screeninfo import get_monitors
 import re
+import xml.etree.ElementTree as ET
 
 # 获取该文件的绝对路径，输出为：B:\BaiduNetdiskDownload\ubuntu 实验\yolov5\detect.py
 FILE = Path(__file__).resolve()
@@ -207,20 +208,40 @@ if __name__ == '__main__':
     print("窗口位置：", x, y, w, h)
     print("--------------------------------------------------")
     print("加载模型...")
-    device = 'cpu'
-    weights = "./yolov5s.pt"
     source = "%s %s %s %s %s" % (screen_number, x, y, w, h)
+
+    tree = ET.parse('./parameter.xml')
+    root = tree.getroot()
+    element = {}
+    for elem in root:
+        tag = elem.tag
+        attrib = elem.attrib['attribute']
+        # 转换数据类型
+        if attrib[0] == '[' and attrib[-1] == ']':
+            attrib = list(map(int, attrib[1:-1].split(',')))
+        elif attrib.isdigit():
+            attrib = int(attrib)
+        elif attrib.replace('.', '', 1).isdigit():
+            attrib = float(attrib)
+        elif attrib == 'True':
+            attrib = True
+        elif attrib == 'False':
+            attrib = False
+        element[tag] = attrib
+
     data = "./data/coco128.yaml"
-    imgsz = [640, 640]  # 推理
-    conf_thres = 0.25  # 置信度阈值
-    iou_thresh = 0.45  # IOU阈值(方框合并)
-    max_det = 1000  # 最大检测数
-    classes = [0]  # 检测类别 0:person
-    augment = False  # 图像增强
-    visualize = True  # 可视化特征图
-    line_thickness = 5  # 框线粗细
-    half = False  # 半精度推理
-    dnn = False  # OpenCV DNN推理
+    device = element['device']
+    weights = element['weights']
+    imgsz = element['img-size']
+    conf_thres = element['conf_thres']
+    iou_thresh = element['iou_thresh']
+    max_det = element['max_det']
+    classes = element['classes']
+    augment = element['augment']
+    visualize = element['visualize']
+    line_thickness = element['line_thickness']
+    half = element['half']
+    dnn = element['dnn']
     # 开始
     run(weights, source, data, imgsz, conf_thres, iou_thresh, max_det, device, classes,
         False, augment, visualize, line_thickness, False, False, half, dnn)
