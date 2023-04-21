@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <weights attribute="./yolov5s.pt"/> <!--模型权重-->
+    <weights attribute="./yolov5m.pt"/> <!--模型权重-->
     <device attribute="0"/> <!--推理设备 cpu, 0, 1, ...(gpu)-->
     <img-size attribute="[640, 640]"/>  <!--推理图像尺寸-->
     <conf_thres attribute="0.25"/>  <!--置信度阈值-->
