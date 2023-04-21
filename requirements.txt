@@ -50,3 +50,4 @@ setuptools>=65.5.1 # Snyk vulnerability fix
 
 pygetwindow~=0.0.9
 pyautogui~=0.9.53
+screeninfo~=0.8.1

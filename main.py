@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 import pyautogui
 import torch
+from screeninfo import get_monitors
+import re
 
 # 获取该文件的绝对路径，输出为：B:\BaiduNetdiskDownload\ubuntu 实验\yolov5\detect.py
 FILE = Path(__file__).resolve()
@@ -63,6 +65,9 @@ def run(
     # Run inference
     # 通过运行一次推理来预热模型（内部初始化一张空白图预热模型）
     model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
+
+    # Directories
+    save_dir = increment_path("./runs/detect")  # increment run
 
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
     # dataset数据集遍历，path为图片路径
@@ -164,6 +169,22 @@ def run(
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
 
 
+# get windows screen number
+def get_window_screen_number(window_title):
+    for monitor in get_monitors():
+        # Get the position of the top-left corner of the monitor
+        monitor_x, monitor_y = monitor.x, monitor.y
+        # Get the width and height of the monitor
+        monitor_width, monitor_height = monitor.width, monitor.height
+
+        for win in pyautogui.getAllWindows():
+            if win.title == window_title:
+                left, top = win.topleft
+                if monitor_x <= left <= monitor_x + monitor_width and monitor_y <= top <= monitor_y + monitor_height:
+                    return re.findall(r'\d+', monitor.name)[0]
+    return None
+
+
 if __name__ == '__main__':
     # 获取所有窗口
     windows_list = pyautogui.getAllWindows()
@@ -180,24 +201,26 @@ if __name__ == '__main__':
     print("窗口标题：", title)
     # 通过窗口标题获取窗口
     window = pyautogui.getWindowsWithTitle(title.strip())[0]
+    screen_number = get_window_screen_number(title.strip())
     x, y, w, h = window.left, window.top, window.width, window.height
+    print("屏幕编号：", screen_number)
     print("窗口位置：", x, y, w, h)
     print("--------------------------------------------------")
     print("加载模型...")
-    run(weights="./yolov5s.pt",
-        source="10 0 0 1400 1000",
-        data='data/coco128.yaml',
-        imgsz=[640, 640],
-        conf_thres=0.25,
-        iou_thres=0.45,
-        max_det=1000, device='',
-        classes=None,
-        agnostic_nms=False,
-        augment=False,
-        visualize=False,
-        line_thickness=3,
-        hide_labels=False,
-        hide_conf=False,
-        half=False,
-        dnn=False,
-    )
+    device = 'cpu'
+    weights = "./yolov5s.pt"
+    source = "%s %s %s %s %s" % (screen_number, x, y, w, h)
+    data = "./data/coco128.yaml"
+    imgsz = [640, 640]  # 推理
+    conf_thres = 0.25  # 置信度阈值
+    iou_thresh = 0.45  # IOU阈值(方框合并)
+    max_det = 1000  # 最大检测数
+    classes = [0]  # 检测类别 0:person
+    augment = False  # 图像增强
+    visualize = True  # 可视化特征图
+    line_thickness = 5  # 框线粗细
+    half = False  # 半精度推理
+    dnn = False  # OpenCV DNN推理
+    # 开始
+    run(weights, source, data, imgsz, conf_thres, iou_thresh, max_det, device, classes,
+        False, augment, visualize, line_thickness, False, False, half, dnn)
