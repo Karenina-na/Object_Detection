@@ -8,6 +8,10 @@ import torch
 from screeninfo import get_monitors
 import re
 import xml.etree.ElementTree as ET
+import pydirectinput
+
+# 关闭安全限制
+pydirectinput.PAUSE = 0.0
 
 # 获取该文件的绝对路径，输出为：B:\BaiduNetdiskDownload\ubuntu 实验\yolov5\detect.py
 FILE = Path(__file__).resolve()
@@ -140,27 +144,29 @@ def run(
 
                 # Write results
                 # 保存预测信息: txt、img0上画框、crop_img
+                xywhs = []
                 for *xyxy, conf, cls in reversed(det):
-                    # -----------------------------------------------------------------------
                     # 将xyxy(左上角 + 右下角)格式转换为xywh(中心的 + 宽高)格式 并除以gn(whwh)做归一化 转为list再保存
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()
-                    get_position_action(xywh)
-                    # -----------------------------------------------------------------------
+                    xywhs.append(xywh)
 
                     # 在原图上画框 + 将预测到的目标剪切出来
                     c = int(cls)  # integer class
                     label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                     annotator.box_label(xyxy, label, color=colors(c, True))
 
-            # Stream results
-            im0 = annotator.result()
-            if platform.system() == 'Linux' and p not in windows:
-                windows.append(p)
-                cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
-                cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
-            # 通过imshow显示出框
-            cv2.imshow(str(p), im0)
-            cv2.waitKey(1)  # 1 millisecond
+                get_position_action(xywhs, source)
+
+            if visualize:
+                # Stream results
+                im0 = annotator.result()
+                if platform.system() == 'Linux' and p not in windows:
+                    windows.append(p)
+                    cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
+                    cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
+                # 通过imshow显示出框
+                cv2.imshow(str(p), im0)
+                cv2.waitKey(1)  # 1 millisecond
 
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
@@ -172,7 +178,7 @@ def run(
 
 
 # object position function
-def get_position_action(data):
+def get_position_action(data, source):
     pass
 
 
